@@ -1,3 +1,4 @@
+# Dupla: Maria Eduarda e José Daniel
 # TaskFlow - Entrega parcial 1
 
 Projeto em Next.js com TypeScript, Tailwind CSS e Firebase Authentication para a entrega parcial do sistema TaskFlow.
