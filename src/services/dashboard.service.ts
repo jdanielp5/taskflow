@@ -1,7 +1,37 @@
-export function getDashboardMetrics() {
+import { Task } from "@/types/task";
+
+function isThisWeek(dateValue: string) {
+  if (!dateValue) return false;
+
+  const today = new Date();
+  const date = new Date(`${dateValue}T00:00:00`);
+  const day = today.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + diffToMonday);
+  monday.setHours(0, 0, 0, 0);
+
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23, 59, 59, 999);
+
+  return date >= monday && date <= sunday;
+}
+
+function isOverdue(task: Task) {
+  if (!task.dueDate || task.status === "concluido") return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const dueDate = new Date(`${task.dueDate}T00:00:00`);
+  return dueDate < today;
+}
+
+export function getDashboardMetrics(tasks: Task[]) {
   return {
-    pending: 0,
-    completedThisWeek: 0,
-    overdue: 0,
+    pending: tasks.filter((task) => task.status !== "concluido").length,
+    completedThisWeek: tasks.filter((task) => task.status === "concluido" && isThisWeek(task.dueDate)).length,
+    overdue: tasks.filter(isOverdue).length,
   };
 }

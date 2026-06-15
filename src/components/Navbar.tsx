@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CalendarDays, KanbanSquare, ListTodo, LogOut, Menu, UserRound } from "lucide-react";
+import {
+  CalendarDays,
+  KanbanSquare,
+  ListTodo,
+  LogOut,
+  Menu,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -13,6 +19,8 @@ export function Navbar() {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const router = useRouter();
+
+  const logoHref = user ? "/dashboard" : "/";
 
   async function handleLogout() {
     await logout();
@@ -28,7 +36,11 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <Link href="/" className="text-xl font-black tracking-tight text-slate-950">
+        <Link
+          href={logoHref}
+          onClick={() => setOpen(false)}
+          className="text-xl font-black tracking-tight text-slate-950"
+        >
           Task<span className="text-blue-600">Flow</span>
         </Link>
 
@@ -44,10 +56,17 @@ export function Navbar() {
         <nav className="hidden items-center gap-3 md:flex">
           {!user && (
             <>
-              <Link className="rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100" href="/login">
+              <Link
+                className="rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100"
+                href="/login"
+              >
                 Entrar
               </Link>
-              <Link className="rounded-xl bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700" href="/register">
+
+              <Link
+                className="rounded-xl bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700"
+                href="/register"
+              >
                 Criar conta
               </Link>
             </>
@@ -55,20 +74,46 @@ export function Navbar() {
 
           {user && (
             <>
-              <Link className="rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100" href="/dashboard">
+              <Link
+                className="rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100"
+                href="/dashboard"
+              >
                 Dashboard
               </Link>
-              <button type="button" onClick={handlePendingClick} className="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100">
-                <ListTodo size={18} /> Tarefas
+
+              <Link
+                className="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100"
+                href="/tasks"
+              >
+                <ListTodo size={18} />
+                Tarefas
+              </Link>
+
+              <button
+                type="button"
+                onClick={handlePendingClick}
+                className="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100"
+              >
+                <KanbanSquare size={18} />
+                Kanban
               </button>
-              <button type="button" onClick={handlePendingClick} className="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100">
-                <KanbanSquare size={18} /> Kanban
+
+              <button
+                type="button"
+                onClick={handlePendingClick}
+                className="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100"
+              >
+                <CalendarDays size={18} />
+                Calendário
               </button>
-              <button type="button" onClick={handlePendingClick} className="inline-flex items-center gap-2 rounded-xl px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100">
-                <CalendarDays size={18} /> Calendário
-              </button>
-              <button type="button" onClick={handleLogout} className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2 font-semibold text-white hover:bg-slate-800">
-                <LogOut size={18} /> Sair
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2 font-semibold text-white hover:bg-slate-800"
+              >
+                <LogOut size={18} />
+                Sair
               </button>
             </>
           )}
@@ -80,10 +125,19 @@ export function Navbar() {
           <div className="mx-auto flex max-w-6xl flex-col gap-2 pt-3">
             {!user && (
               <>
-                <Link onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100" href="/login">
+                <Link
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+                  href="/login"
+                >
                   Entrar
                 </Link>
-                <Link onClick={() => setOpen(false)} className="rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white hover:bg-blue-700" href="/register">
+
+                <Link
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white hover:bg-blue-700"
+                  href="/register"
+                >
                   Criar conta
                 </Link>
               </>
@@ -91,20 +145,48 @@ export function Navbar() {
 
             {user && (
               <>
-                <Link onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100" href="/dashboard">
+                <Link
+                  onClick={() => setOpen(false)}
+                  className="rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+                  href="/dashboard"
+                >
                   Dashboard
                 </Link>
-                <button type="button" onClick={handlePendingClick} className="inline-flex items-center gap-2 rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100">
-                  <ListTodo size={18} /> Tarefas
+
+                <Link
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center gap-2 rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+                  href="/tasks"
+                >
+                  <ListTodo size={18} />
+                  Tarefas
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={handlePendingClick}
+                  className="inline-flex items-center gap-2 rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+                >
+                  <KanbanSquare size={18} />
+                  Kanban
                 </button>
-                <button type="button" onClick={handlePendingClick} className="inline-flex items-center gap-2 rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100">
-                  <KanbanSquare size={18} /> Kanban
+
+                <button
+                  type="button"
+                  onClick={handlePendingClick}
+                  className="inline-flex items-center gap-2 rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+                >
+                  <CalendarDays size={18} />
+                  Calendário
                 </button>
-                <button type="button" onClick={handlePendingClick} className="inline-flex items-center gap-2 rounded-xl px-4 py-3 font-semibold text-slate-700 hover:bg-slate-100">
-                  <CalendarDays size={18} /> Calendário
-                </button>
-                <button type="button" onClick={handleLogout} className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-3 font-semibold text-white hover:bg-slate-800">
-                  <LogOut size={18} /> Sair
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-3 font-semibold text-white hover:bg-slate-800"
+                >
+                  <LogOut size={18} />
+                  Sair
                 </button>
               </>
             )}

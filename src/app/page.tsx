@@ -5,7 +5,7 @@ const features = [
   "Cadastro com validação de campos",
   "Login com e-mail, Google e GitHub",
   "Dashboard protegido para usuários autenticados",
-  "Exclusão da conta pelo próprio usuário",
+  "Lista de tarefas com cadastro, edição e exclusão",
 ];
 
 export default function Home() {
@@ -22,7 +22,7 @@ export default function Home() {
           </h1>
 
           <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-            O TaskFlow é uma base para um gestor de tarefas. Nesta etapa, o foco é o sistema de login completo com Firebase Authentication e uma área protegida para o usuário.
+            O TaskFlow é uma base para um gestor de tarefas. Nesta etapa, o foco é o sistema de login completo com Firebase Authentication e o CRUD principal de tarefas no Firestore.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">

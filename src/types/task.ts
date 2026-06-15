@@ -19,3 +19,11 @@ export type Task = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type TaskFormValues = {
+  title: string;
+  description: string;
+  dueDate: string;
+  priority: TaskPriority;
+  status: TaskStatus;
+};

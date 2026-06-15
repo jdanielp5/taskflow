@@ -1,20 +1,23 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, CheckCircle2, Clock3, Trash2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Clock3, ListTodo, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardCharts } from "@/components/DashboardCharts";
 import { useAuth } from "@/hooks/useAuth";
+import { useTasks } from "@/hooks/useTasks";
 import { deleteCurrentUser } from "@/services/auth.service";
 import { getDashboardMetrics } from "@/services/dashboard.service";
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
+  const { tasks, loading: tasksLoading } = useTasks(user?.uid);
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [deleting, setDeleting] = useState(false);
-  const metrics = useMemo(() => getDashboardMetrics(), []);
+  const metrics = useMemo(() => getDashboardMetrics(tasks), [tasks]);
   const mainProvider = user?.providerData[0]?.providerId;
   const needsPassword = mainProvider === "password";
 
@@ -30,7 +33,7 @@ export default function DashboardPage() {
 
     try {
       await deleteCurrentUser(needsPassword ? password : undefined);
-      toast.success("Conta excluída com sucesso.");
+      toast.success("Conta e tarefas excluídas com sucesso.");
       router.push("/");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível excluir a conta.");
@@ -57,7 +60,7 @@ export default function DashboardPage() {
           <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <h1 className="text-3xl font-black text-slate-950 md:text-4xl">Olá, {user.displayName || user.email}</h1>
-              <p className="mt-2 text-slate-600">Seu dashboard já está protegido. As telas de tarefas serão finalizadas nas próximas entregas.</p>
+              <p className="mt-2 text-slate-600">Acesse o cadastro de tarefas ou acompanhe o resumo das suas atividades.</p>
             </div>
             <div className="rounded-2xl bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700">
               {user.email}
@@ -71,7 +74,7 @@ export default function DashboardPage() {
               <Clock3 />
             </div>
             <p className="text-sm font-bold text-slate-500">Tarefas pendentes</p>
-            <p className="mt-2 text-4xl font-black text-slate-950">{metrics.pending}</p>
+            <p className="mt-2 text-4xl font-black text-slate-950">{tasksLoading ? "..." : metrics.pending}</p>
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -79,7 +82,7 @@ export default function DashboardPage() {
               <CheckCircle2 />
             </div>
             <p className="text-sm font-bold text-slate-500">Concluídas na semana</p>
-            <p className="mt-2 text-4xl font-black text-slate-950">{metrics.completedThisWeek}</p>
+            <p className="mt-2 text-4xl font-black text-slate-950">{tasksLoading ? "..." : metrics.completedThisWeek}</p>
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -87,27 +90,24 @@ export default function DashboardPage() {
               <AlertTriangle />
             </div>
             <p className="text-sm font-bold text-slate-500">Tarefas vencidas</p>
-            <p className="mt-2 text-4xl font-black text-slate-950">{metrics.overdue}</p>
+            <p className="mt-2 text-4xl font-black text-slate-950">{tasksLoading ? "..." : metrics.overdue}</p>
           </div>
         </div>
 
-        <DashboardCharts />
+        <DashboardCharts tasks={tasks} />
 
         <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_0.75fr]">
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-black text-slate-950">Próximas funcionalidades</h2>
-            <div className="mt-5 grid gap-3 sm:grid-cols-3">
-              {['Criar tarefa', 'Abrir Kanban', 'Ver calendário'].map((label) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => toast.info("Função reservada para a próxima entrega.")}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-5 text-left font-bold text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-                >
-                  {label}
-                </button>
-              ))}
+            <div className="mb-4 inline-flex rounded-2xl bg-blue-50 p-3 text-blue-700">
+              <ListTodo />
             </div>
+            <h2 className="text-xl font-black text-slate-950">Gestão de tarefas</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              A página de tarefas já permite cadastrar, visualizar, editar e excluir tarefas do usuário logado.
+            </p>
+            <Link href="/tasks" className="primary-button mt-5 inline-flex items-center justify-center gap-2">
+              Abrir lista de tarefas
+            </Link>
           </div>
 
           <div className="rounded-3xl border border-red-100 bg-white p-6 shadow-sm">
@@ -116,7 +116,7 @@ export default function DashboardPage() {
             </div>
             <h2 className="text-xl font-black text-slate-950">Excluir conta</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Esta opção remove o usuário autenticado do Firebase Authentication. Para conta com e-mail e senha, informe a senha atual antes de excluir.
+              Esta opção remove o usuário autenticado e também apaga as tarefas vinculadas a ele no Firestore.
             </p>
 
             {needsPassword && (

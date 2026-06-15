@@ -13,6 +13,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { deleteTasksByUser } from "@/services/task.service";
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -77,5 +78,6 @@ export async function deleteCurrentUser(password?: string) {
     await reauthenticateWithPopup(user, githubProvider);
   }
 
+  await deleteTasksByUser(user.uid);
   await deleteUser(user);
 }
