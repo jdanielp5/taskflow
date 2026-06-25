@@ -1,6 +1,8 @@
-export type AppUser = {
+export type UserProfile = {
   uid: string;
-  name: string | null;
-  email: string | null;
-  photoURL: string | null;
+  name: string;
+  email: string;
+  provider: string;
+  createdAt: string;
+  updatedAt: string;
 };
