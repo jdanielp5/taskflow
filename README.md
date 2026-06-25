@@ -1,62 +1,148 @@
-# Dupla: Maria Eduarda e José Daniel
-# TaskFlow - Login, cadastro e CRUD de tarefas
+# TaskFlow - Gestor completo de tarefas
 
-Projeto em Next.js com TypeScript, Tailwind CSS, Firebase Authentication e Firestore.
+**Integrantes:** Maria Eduarda e José Daniel
 
-## O que foi implementado nesta versão
+Aplicação acadêmica desenvolvida com Next.js App Router, TypeScript, Tailwind CSS, Firebase Authentication e Firestore. A entrega final reúne autenticação, CRUD completo, dashboard com dois gráficos, subtarefas, progresso, calendário, Kanban com drag and drop, página de detalhes, acessibilidade e deploy no Vercel.
 
-- Landing page responsiva
-- Cadastro com nome, e-mail, senha e confirmar senha
-- Validação com React Hook Form e zodResolver
-- Criação de conta no Firebase Authentication
-- Envio de confirmação de e-mail
-- Login com e-mail e senha
-- Login com Google
-- Login com GitHub
-- Dashboard protegido para usuário autenticado
-- Menu completo após login
-- Lista de tarefas protegida por login
-- Cadastro de tarefas no Firestore
-- Edição de tarefas no Firestore
-- Exclusão de tarefas no Firestore
-- Métricas do dashboard usando tarefas reais
-- Exclusão de conta do usuário autenticado
-- Exclusão das tarefas do usuário ao excluir a conta
-- Estrutura modular seguindo a sugestão do trabalho
+## Funcionalidades implementadas
 
-## Escopo propositalmente deixado para próxima etapa
-
-- Kanban com drag and drop
-- Calendário com FullCalendar
-- Subtarefas e barra de progresso
-- Página dedicada de detalhes da tarefa
-- Dashboard com biblioteca Tremor
-- VLibras e recursos completos de acessibilidade
+- Landing page responsiva com menu, footer, call to action, mockup e componentes inspirados no Aceternity UI.
+- Cadastro com nome, e-mail, senha forte, confirmação de senha, React Hook Form e `zodResolver`.
+- Confirmação de e-mail antes do primeiro login.
+- Login por e-mail/senha, Google e GitHub usando Firebase Authentication.
+- Rotas autenticadas protegidas por Proxy do Next.js e validação adicional no cliente.
+- Firestore protegido por regras que isolam os dados de cada usuário.
+- Dashboard com tarefas pendentes, concluídas na semana e vencidas.
+- Dois gráficos em componentes Tremor-style baseados no modelo open source copy-and-paste do Tremor: barras por status e rosca por prioridade.
+- CRUD completo de tarefas com título, descrição, vencimento, prioridade e status.
+- Subtarefas com inclusão, remoção, conclusão e barra de progresso automática.
+- Página dedicada de detalhes com edição completa e log de trabalho.
+- Quadro Kanban com colunas A Fazer, Fazendo e Concluído.
+- Drag and drop acessível com Dnd Kit e atualização imediata no Firestore.
+- Inclusão e remoção de tarefas do Kanban a partir da lista geral.
+- Calendário FullCalendar com eventos automáticos e modal de detalhes.
+- Toasts com Sonner.
+- Tema claro, escuro e alto contraste com Next Themes.
+- VLibras obrigatório.
+- Ajuste do tamanho do texto, redução de animações, sublinhado de links, foco visível e link para pular conteúdo.
+- Route Handler em `/api/health` para demonstrar API no App Router.
+- Exclusão completa da conta e das tarefas do usuário.
 
 ## Tecnologias
 
-- Next.js App Router
+- Next.js 16 - App Router
+- React 19
 - TypeScript
-- Tailwind CSS
-- Firebase Authentication
-- Firebase Firestore
-- React Hook Form
-- Zod
-- Sonner
+- Tailwind CSS 4
+- Firebase Authentication e Cloud Firestore
+- React Hook Form + Zod
+- FullCalendar
+- Dnd Kit
+- Recharts em componentes Tremor-style
+- Framer Motion
 - Lucide React
 - Next Themes
+- Sonner
 
-## Como rodar localmente
+## Estrutura principal
 
-Instale as dependências:
+```text
+src/
+├── app/
+│   ├── api/health/route.ts
+│   ├── calendar/page.tsx
+│   ├── dashboard/page.tsx
+│   ├── kanban/page.tsx
+│   ├── login/page.tsx
+│   ├── register/page.tsx
+│   ├── tasks/
+│   │   ├── [id]/page.tsx
+│   │   └── page.tsx
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── tremor/
+│   ├── ui/aceternity/
+│   ├── AccessibilityPanel.tsx
+│   ├── CalendarTaskModal.tsx
+│   ├── DashboardCharts.tsx
+│   ├── KanbanBoard.tsx
+│   ├── Navbar.tsx
+│   ├── SubtaskManager.tsx
+│   ├── TaskCard.tsx
+│   ├── TaskForm.tsx
+│   ├── VLibras.tsx
+│   └── WorkLogSection.tsx
+├── contexts/AuthContext.tsx
+├── hooks/
+│   ├── useAuth.ts
+│   └── useTasks.ts
+├── lib/
+│   ├── firebase.ts
+│   └── utils.ts
+├── services/
+│   ├── auth.service.ts
+│   ├── dashboard.service.ts
+│   └── task.service.ts
+├── types/
+│   ├── task.ts
+│   └── user.ts
+└── proxy.ts
+```
+
+## Modelagem resumida
+
+```ts
+type Subtask = {
+  id: string;
+  title: string;
+  completed: boolean;
+  createdAt: string;
+};
+
+type WorkLog = {
+  id: string;
+  text: string;
+  createdAt: string;
+};
+
+type Task = {
+  id: string;
+  userId: string;
+  title: string;
+  description: string;
+  dueDate: string;
+  priority: "baixa" | "media" | "alta";
+  status: "a-fazer" | "fazendo" | "concluido";
+  showOnKanban: boolean;
+  subtasks: Subtask[];
+  workLogs: WorkLog[];
+  createdAt: string;
+  updatedAt: string;
+  completedAt: string | null;
+};
+```
+
+## Instalação local
+
+### 1. Requisitos
+
+- Node.js 20 ou superior.
+- npm.
+- Projeto criado no Firebase.
+
+### 2. Instalar dependências
 
 ```bash
 npm install
 ```
 
-Crie o arquivo `.env.local` na raiz do projeto usando o `.env.example` como modelo:
+### 3. Variáveis de ambiente
 
-```bash
+Copie `.env.example` para `.env.local` e preencha com as credenciais do aplicativo Web do Firebase:
+
+```env
 NEXT_PUBLIC_FIREBASE_API_KEY=sua_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=seu_auth_domain
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=seu_project_id
@@ -65,102 +151,108 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=seu_messaging_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=seu_app_id
 ```
 
-Rode o projeto:
+O arquivo `.env.local` está no `.gitignore` e não deve ser enviado ao GitHub.
+
+### 4. Rodar o projeto
 
 ```bash
 npm run dev
 ```
 
-Abra no navegador:
+Abra `http://localhost:3000`.
+
+### 5. Validar antes do commit
 
 ```bash
-http://localhost:3000
+npm run lint
+npm run typecheck
+npm run build
 ```
 
-## Configuração do Firebase
+Ou execute tudo de uma vez:
 
-1. Acesse o Firebase Console.
-2. Crie ou abra o projeto usado no `.env.local`.
-3. Em Authentication > Sign-in method, habilite Email/Password.
-4. Habilite Google, se for usar login com Gmail.
-5. Habilite GitHub, se for usar login com GitHub.
-6. Em Firestore Database, crie o banco de dados.
-7. Use regras permitindo que cada usuário acesse apenas as próprias tarefas.
-
-Exemplo de regra para desenvolvimento/entrega acadêmica:
-
-```txt
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /tasks/{taskId} {
-      allow read, create: if request.auth != null && request.auth.uid == request.resource.data.userId;
-      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
-    }
-  }
-}
+```bash
+npm run check
 ```
 
-## Deploy no Vercel
+## Configuração do Firebase Authentication
 
-1. Suba o projeto para o GitHub.
-2. Acesse o Vercel.
-3. Clique em Add New Project.
-4. Importe o repositório.
-5. Em Environment Variables, adicione as mesmas variáveis do `.env.local`.
-6. Faça o deploy.
-7. Copie o link gerado pelo Vercel.
-8. No Firebase Authentication, adicione o domínio do Vercel em Authorized domains.
-9. Faça um novo deploy se alterar variáveis de ambiente.
+No Firebase Console, abra **Authentication > Sign-in method** e habilite:
 
-## O que testar para mostrar no vídeo ou na entrega
+1. E-mail/senha.
+2. Google.
+3. GitHub.
 
-1. Abrir a landing page.
-2. Criar uma conta.
-3. Confirmar o e-mail.
-4. Fazer login.
-5. Abrir o dashboard protegido.
-6. Abrir a página Tarefas.
-7. Cadastrar uma tarefa.
-8. Editar a tarefa.
-9. Excluir a tarefa.
-10. Mostrar que os dados aparecem no Firestore.
-11. Fazer logout.
-12. Tentar acessar `/tasks` sem login e ver que redireciona para `/login`.
+Para o GitHub, crie um OAuth App na conta do GitHub e informe no Firebase o Client ID e Client Secret. Use a URL de callback exibida pelo próprio Firebase.
 
-## Estrutura principal
+Em **Authentication > Settings > Authorized domains**, adicione:
 
-```txt
-src/
-├── app/
-│   ├── page.tsx
-│   ├── login/
-│   ├── register/
-│   ├── dashboard/
-│   ├── tasks/
-│   ├── kanban/
-│   └── calendar/
-├── components/
-│   ├── Navbar.tsx
-│   ├── Footer.tsx
-│   ├── TaskCard.tsx
-│   ├── TaskForm.tsx
-│   ├── DashboardCharts.tsx
-│   └── KanbanBoard.tsx
-├── services/
-│   ├── auth.service.ts
-│   ├── task.service.ts
-│   └── dashboard.service.ts
-├── lib/
-│   └── firebase.ts
-├── hooks/
-│   ├── useAuth.ts
-│   └── useTasks.ts
-├── types/
-│   ├── task.ts
-│   └── user.ts
-├── contexts/
-│   ├── AuthContext.tsx
-│   └── ThemeContext.tsx
-└── middleware.ts
+- `localhost` para testes locais.
+- O domínio final da Vercel.
+
+## Configuração do Firestore
+
+1. Abra **Firestore Database**.
+2. Crie o banco.
+3. Abra a aba **Rules**.
+4. Copie o conteúdo de `firestore.rules`.
+5. Clique em **Publish**.
+
+As regras garantem que um usuário só leia e altere tarefas cujo `userId` seja o próprio UID.
+
+## Deploy na Vercel
+
+1. Envie a branch final para o GitHub e faça merge na `main`.
+2. Na Vercel, importe o repositório.
+3. Em **Environment Variables**, cadastre todas as variáveis do `.env.local`.
+4. Faça o deploy.
+5. Adicione o domínio da Vercel em **Firebase Authentication > Authorized domains**.
+6. Teste login social, Firestore, Kanban e calendário no endereço publicado.
+
+## Roteiro de teste da entrega
+
+1. Mostrar a landing page e a responsividade.
+2. Abrir o painel de acessibilidade e o VLibras.
+3. Criar uma conta e mostrar a validação de senha.
+4. Confirmar o e-mail e realizar login.
+5. Mostrar o dashboard, as três métricas e os dois gráficos.
+6. Criar uma tarefa e editar seus campos.
+7. Abrir os detalhes, adicionar subtarefas e mostrar a barra de progresso.
+8. Adicionar um registro no log de trabalho.
+9. Mover a tarefa no Kanban e confirmar a mudança de status.
+10. Abrir o calendário e clicar no evento para mostrar o modal.
+11. Excluir uma tarefa.
+12. Mostrar os documentos no Firestore.
+13. Fazer logout e tentar acessar uma rota protegida.
+
+## Arquitetura em camadas
+
+```text
+Interface (App Router + componentes)
+          ↓
+Contexts e Hooks (autenticação e tempo real)
+          ↓
+Services (regras de negócio)
+          ↓
+Firebase SDK / Route Handler
+          ↓
+Authentication + Firestore
 ```
+
+## Desafios técnicos e soluções
+
+### Estado do Kanban
+
+O drag and drop precisa atualizar a interface e persistir o status. O projeto usa Dnd Kit para identificar a coluna de destino e `updateTaskStatus` para salvar no Firestore. O listener `onSnapshot` sincroniza todas as telas.
+
+### Calendário com dados em tempo real
+
+As tarefas são transformadas em eventos somente quando possuem data de vencimento. O ID original fica em `extendedProps`, permitindo localizar a tarefa e abrir o modal correto.
+
+### Progresso das subtarefas
+
+A porcentagem é calculada em tempo de renderização pela quantidade concluída dividida pelo total. Assim, não existe um valor duplicado no banco que possa ficar inconsistente.
+
+## Observações de segurança
+
+O cookie usado pelo Proxy serve como indicação de navegação para redirecionar usuários não autenticados. A autorização real dos dados é feita pelas regras do Firestore, baseadas em `request.auth.uid`.

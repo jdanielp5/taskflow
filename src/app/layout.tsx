@@ -3,11 +3,13 @@ import { Toaster } from "sonner";
 import { Providers } from "@/components/Providers";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { AccessibilityPanel } from "@/components/AccessibilityPanel";
+import { VLibras } from "@/components/VLibras";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "TaskFlow",
-  description: "Sistema de login e gestão de tarefas",
+  title: { default: "TaskFlow", template: "%s | TaskFlow" },
+  description: "Sistema completo de gerenciamento de tarefas com Firebase, Kanban e calendário.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -15,10 +17,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="pt-BR" suppressHydrationWarning>
       <body>
         <Providers>
+          <a href="#conteudo-principal" className="skip-link">Pular para o conteúdo principal</a>
           <Navbar />
-          <main>{children}</main>
+          <main id="conteudo-principal" tabIndex={-1}>{children}</main>
           <Footer />
-          <Toaster richColors position="top-right" />
+          <AccessibilityPanel />
+          <VLibras />
+          <Toaster richColors position="top-right" closeButton />
         </Providers>
       </body>
     </html>
